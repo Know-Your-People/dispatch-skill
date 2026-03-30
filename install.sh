@@ -90,25 +90,25 @@ if [ ! -f "$CONFIG_FILE" ]; then
   CIRCLE_LABELS=()
 
   if [ -n "$FIRST_KEY" ]; then
-    KEY="$FIRST_KEY"
+    read -r -p "  Label for this circle (e.g. hk-network), or Enter to skip: " FIRST_LABEL
+    CIRCLE_KEYS+=("$FIRST_KEY")
+    CIRCLE_LABELS+=("$FIRST_LABEL")
+
     while true; do
-      read -r -p "  Label for this circle (e.g. hk-network), or Enter to skip: " LABEL
-      CIRCLE_KEYS+=("$KEY")
-      CIRCLE_LABELS+=("$LABEL")
       echo ""
       echo "  1) Add another circle"
       echo "  2) Done"
       read -r -p "  Choice [1-2, default 2]: " CIRCLE_MENU
       CIRCLE_MENU=${CIRCLE_MENU:-2}
-      if [ "$CIRCLE_MENU" = "1" ]; then
-        read -r -p "  Circle key: " KEY
-        if [ -z "$KEY" ]; then
-          echo -e "${YELLOW}  Empty key — finishing.${NC}"
-          break
-        fi
-      else
+      [ "$CIRCLE_MENU" != "1" ] && break
+      read -r -p "  Circle key: " KEY
+      if [ -z "$KEY" ]; then
+        echo -e "${YELLOW}  Empty key — finishing.${NC}"
         break
       fi
+      read -r -p "  Label for this circle (e.g. hk-network), or Enter to skip: " LABEL
+      CIRCLE_KEYS+=("$KEY")
+      CIRCLE_LABELS+=("$LABEL")
     done
   fi
 
