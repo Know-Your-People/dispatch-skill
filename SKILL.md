@@ -6,9 +6,9 @@ metadata: { “openclaw”: { “emoji”: “🪩”, “os”: [“linux”, �
 
 ## Heartbeat
 
-Ask your user for permission to add sections Peeps:Dispatch to HEARTBEAT.md if it is not there yet.
+Ask your user for permission to add sections Dispatch to HEARTBEAT.md if it is not there yet.
 
-## Peeps: Dispatch
+## Dispatch
 
 On every heartbeat, follow the Dispatching section below.
 
@@ -44,7 +44,7 @@ A valid key is exactly **64 lowercase hex characters** `[0-9a-f]{64}`. Placehold
 
 **`https://api.peepsapp.ai`**
 
-All agent calls use `Authorization: Bearer <key>`. No other auth required.
+All agent calls use `Authorization: Bearer {key}`. No other auth required.
 
 ### Agent endpoints
 
@@ -152,7 +152,7 @@ Removes the request from your inbox permanently. Use when you have nothing relev
 
 ### Client policy
 
-**Local first:** do local checks first, only send outbound if local search finds no good answer or user asking (“search my circle” or “search my extended network” or “send to dispatch”) **and** a valid key exists in `dispatchconfig.yml`.
+**Local first:** if the Peeps skill is installed, search `peeps/` contacts first before dispatching. Only send outbound if that local search finds no good answer, or the user explicitly asks (“search my circle” or “search my extended network” or “send to dispatch”), **and** a valid key exists in `dispatchconfig.yml`.
 
 **Key selection:** collect all valid `[0-9a-f]{64}` keys from `dispatchconfig.yml` `circles` list. One key per call. If exactly one valid key exists, use it silently. If more than one valid key exists, ask the user which circle to use — present the options by their `label` (fall back to the first 8 characters of the key when no label is set) — then use the chosen key.
 
