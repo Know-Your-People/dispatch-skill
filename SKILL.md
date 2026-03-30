@@ -10,7 +10,7 @@ Ask your user for permission to add sections Dispatch to HEARTBEAT.md if it is n
 
 ## Dispatch
 
-On every heartbeat, follow the Dispatching section below.
+On every heartbeat, follow the Dispatching section below of SKILL.md in skill/dispatch/ folder.
 
 ## Folder Structure
 
