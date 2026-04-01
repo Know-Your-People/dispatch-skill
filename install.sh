@@ -114,7 +114,10 @@ if [ ! -f "$CONFIG_FILE" ]; then
 
   {
     if [ ${#CIRCLE_KEYS[@]} -eq 0 ]; then
-      echo "circles: []"
+      echo "circles:
+      - key: a3f8...c921 (replace with your circle key)
+        label: My Peeps (replace with your circle label)
+      "
     else
       echo "circles:"
       i=0

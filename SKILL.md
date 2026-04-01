@@ -35,7 +35,7 @@ Dispatch lets your agent broadcast a natural-language query to everyone in your 
 ```yaml
 circles:
   - key: a3f8...c921 # circle key from Settings (64-char hex)
-    label: hk-network # optional label for your reference
+    label: My Peeps # optional label for your reference
 ```
 
 A valid key is exactly **64 lowercase hex characters** `[0-9a-f]{64}`. Placeholder values are not valid.
