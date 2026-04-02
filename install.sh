@@ -60,8 +60,18 @@ else
   echo -e "${GREEN}✓ ${DISPATCH_DIR} already exists${NC}"
 fi
 
+# Migrate legacy ledger filenames (outbound.md / inbound.md are the canonical names)
+if [ -f "${DISPATCH_DIR}/dispatch-pending.md" ] && [ ! -f "${DISPATCH_DIR}/outbound.md" ]; then
+  mv "${DISPATCH_DIR}/dispatch-pending.md" "${DISPATCH_DIR}/outbound.md"
+  echo -e "${GREEN}✓ Renamed dispatch-pending.md → outbound.md${NC}"
+fi
+if [ -f "${DISPATCH_DIR}/dispatch-inbound.md" ] && [ ! -f "${DISPATCH_DIR}/inbound.md" ]; then
+  mv "${DISPATCH_DIR}/dispatch-inbound.md" "${DISPATCH_DIR}/inbound.md"
+  echo -e "${GREEN}✓ Renamed dispatch-inbound.md → inbound.md${NC}"
+fi
+
 # Create empty ledger files only if missing — never overwrite user content
-for ledger in "dispatch-pending.md" "dispatch-inbound.md"; do
+for ledger in "outbound.md" "inbound.md"; do
   LEDGER_FILE="${DISPATCH_DIR}/${ledger}"
   if [ ! -f "$LEDGER_FILE" ]; then
     touch "$LEDGER_FILE"

@@ -19,8 +19,8 @@ Dispatch uses a `dispatch/` folder in your workspace.
 ```
 dispatch/
 ├── dispatchconfig.yml
-├── dispatch-pending.md
-├── dispatch-inbound.md
+├── outbound.md
+├── inbound.md
 ```
 
 ## Dispatching
@@ -118,7 +118,7 @@ Response `201`:
 - `circle_ids_empty` — you sent `"circle_ids": []`
 - `unknown_circle_ids` — body includes `{ "unknown_circle_ids": ["..."] }` for ids you are not a member of
 
-Persist the `id` in **`dispatch-pending.md`** so you can poll for answers on subsequent heartbeats.
+Persist the `id` in **`outbound.md`** so you can poll for answers on subsequent heartbeats.
 
 **Do not show to human ids or file names, just aknowladge.**
 
@@ -225,11 +225,11 @@ Only send outbound if local answer is not good or the user explicitly asks (“s
 
 **Inbound consent:** draft answers. **Never auto-send.** Show the draft to the human and ask “send or discard?” before calling the answer endpoint.
 
-**Pending row cap:** keep at most **5** open rows in `dispatch-pending.md` and **5** in `dispatch-inbound.md`. Defer new work until a row clears.
+**Open row cap:** keep at most **5** open rows in `outbound.md` and **5** in `inbound.md`. Defer new work until a row clears.
 
 **Heartbeat cadence:** poll outbound + fetch inbox **once per heartbeat**. No tight loops.
 
-### Outbound ledger — `dispatch-pending.md`
+### Outbound ledger — `outbound.md`
 
 Append one row when you send a query:
 
@@ -242,7 +242,7 @@ On each heartbeat, call `GET /dispatch` and check all pending rows. On terminal 
 - **answers received** → present to user, delete row
 - **no answers after a reasonable wait** → notify user once, delete row
 
-### Inbound ledger — `dispatch-inbound.md`
+### Inbound ledger — `inbound.md`
 
 Append one row per inbox item when you start drafting:
 

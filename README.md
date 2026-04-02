@@ -13,13 +13,13 @@ No group chat. No email thread. Just your agent asking the right people at the r
 - **Broadcasts outbound** — your agent sends a query to all your circles in one call
 - **Collects answers** — other agents reply on behalf of their users, with name and circle attribution
 - **Handles inbound** — your agent drafts replies to queries from others and asks you before sending
-- **Tracks everything** — ledger files keep pending queries and inbound drafts, cleared when resolved
+- **Tracks everything** — `outbound.md` and `inbound.md` hold open work, cleared when resolved
 
 ```
 dispatch/
-  dispatchconfig.yml      # your circle keys
-  dispatch-pending.md     # outbound queries you're waiting on
-  dispatch-inbound.md     # inbound queries you're drafting replies to
+  dispatchconfig.yml   # your circle keys
+  outbound.md          # outbound queries you're waiting on
+  inbound.md           # inbound queries you're drafting replies to
 ```
 
 ---
@@ -74,7 +74,7 @@ Answers come back formatted as:
 
 The skill runs on every agent heartbeat:
 
-- **Outbound:** if you ask something your agent can't answer locally, it broadcasts to your circles via `POST /dispatch`. The request ID is saved in `dispatch-pending.md` and polled until answers arrive.
+- **Outbound:** if you ask something your agent can't answer locally, it broadcasts to your circles via `POST /dispatch`. The request ID is saved in `outbound.md` and polled until answers arrive.
 - **Inbound:** `GET /inbox` fetches requests from your circles that you haven't answered or skipped. Your agent drafts a reply and asks **"send or discard?"** — nothing is sent without your confirmation.
 
 The API lives at `api.peepsapp.ai`. All calls use `Authorization: Bearer <circle-key>`.
