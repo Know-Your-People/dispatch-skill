@@ -14,7 +14,7 @@ On every heartbeat, follow the Dispatching section of SKILL.md in skill/dispatch
 
 ## Folder Structure
 
-Dispatch uses a `dispatch/` folder in your workspace. 
+Dispatch uses a `dispatch/` folder in your workspace.
 
 ```
 dispatch/
@@ -120,12 +120,15 @@ Response `200`:
   “requests”: [
     {
       “id”: “7c1d9e3b-...”,
+      “from”: “Ilya”,
       “query”: “does anyone know a good architect in Singapore?”,
       “created_at”: “2026-03-29T09:00:00Z”
     }
   ]
 }
 ```
+
+`from` is the first name of the person who sent the request. Always surface it so your human knows who is asking.
 
 Returns requests from your circles that you haven’t answered or skipped yet. At most 20 at a time.
 
@@ -186,19 +189,20 @@ On each heartbeat, call `GET /dispatch` and check all pending rows. On terminal 
 Append one row per inbox item when you start drafting:
 
 ```
-- 2026-03-29T09:00Z | 7c1d9e3b-... | architect in Singapore? | awaiting_confirm
+- 2026-03-29T09:00Z | 7c1d9e3b-... | Ilya | architect in Singapore? | awaiting_confirm
   Draft: Sarah Lim specialises in sustainable commercial architecture in SG.
 ```
 
 Workflow per item:
 
 1. `GET /inbox` → find pending requests
-2. Draft answers using appropriate tools:
+2. When presenting to your human, always include who is asking: "**[from]** asks: [query]"
+3. Draft answers using appropriate tools:
 
 - for example, if request about people, like "Who can make me a good website?" use Peeps skill
 
-3. Show draft to user → ask **send or discard?**
-4. **Send** → `POST /inbox/<id>/answer` → delete ledger row
-5. **Discard** → `POST /inbox/<id>/skip` → delete ledger row
+4. Show draft to user → ask **send or discard?**
+5. **Send** → `POST /inbox/<id>/answer` → delete ledger row
+6. **Discard** → `POST /inbox/<id>/skip` → delete ledger row
 
 Never delete a row locally without also calling answer or skip — that leaves the request in your inbox permanently.
