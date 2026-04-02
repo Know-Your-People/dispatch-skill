@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Install policy:
+# - Always overwrite SKILL.md from main (users get upstream behavior; re-run to update).
+# - Never overwrite local config or ledger files — only create missing defaults.
+
 SKILL_REPO="git@github.com:Know-Your-People/dispatch-skill.git"
 SKILL_WEB="https://github.com/Know-Your-People/dispatch-skill"
 SKILL_RAW="https://raw.githubusercontent.com/Know-Your-People/dispatch-skill/main"
@@ -40,15 +44,10 @@ fi
 
 echo -e "${GREEN}✓ OpenClaw found${NC}"
 
-# Create skills directory and download skill file
+# Create skills directory and fetch SKILL.md (always overwrite with latest from main)
 mkdir -p "$SKILLS_DIR"
 
-if [ -f "${SKILLS_DIR}/SKILL.md" ]; then
-  echo "  Updating skill..."
-else
-  echo "  Downloading skill..."
-fi
-
+echo "  Fetching latest SKILL.md (overwrites existing)..."
 curl -fsSL "${SKILL_RAW}/SKILL.md" -o "${SKILLS_DIR}/SKILL.md"
 
 echo -e "${GREEN}✓ Skill installed to ${SKILLS_DIR}${NC}"
@@ -61,7 +60,7 @@ else
   echo -e "${GREEN}✓ ${DISPATCH_DIR} already exists${NC}"
 fi
 
-# Create ledger files if they don't exist
+# Create empty ledger files only if missing — never overwrite user content
 for ledger in "dispatch-pending.md" "dispatch-inbound.md"; do
   LEDGER_FILE="${DISPATCH_DIR}/${ledger}"
   if [ ! -f "$LEDGER_FILE" ]; then
@@ -70,7 +69,7 @@ for ledger in "dispatch-pending.md" "dispatch-inbound.md"; do
   fi
 done
 
-# Create dispatchconfig.yml if it doesn't exist
+# Create dispatchconfig.yml only if missing — never overwrite existing keys/settings
 CONFIG_FILE="${DISPATCH_DIR}/dispatchconfig.yml"
 if [ ! -f "$CONFIG_FILE" ]; then
   echo ""
@@ -100,7 +99,7 @@ if [ ! -f "$CONFIG_FILE" ]; then
     echo -e "${YELLOW}  No key added — edit ${CONFIG_FILE} to add one later.${NC}"
   fi
 else
-  echo -e "${GREEN}✓ ${CONFIG_FILE} already exists${NC}"
+  echo -e "${GREEN}✓ ${CONFIG_FILE} already exists (not modified)${NC}"
 fi
 
 echo ""
