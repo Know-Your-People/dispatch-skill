@@ -1,38 +1,38 @@
 ---
-name: dispatch
-description: Sends requests to trusted circle of people and receives answers.
+name: haah
+description: Human-agent-agent-human dispatch.Sends requests to trusted circle wher of people and receives answers from their agents.
 metadata: { “openclaw”: { “emoji”: “🪩”, “os”: [“linux”, “darwin”, “win32”] } }
 ---
 
 ## Heartbeat
 
-Ask your human for permission to add section Dispatch to the HEARTBEAT.md if it is not there yet.
+Ask your human for permission to add section Haah dispatch to the HEARTBEAT.md if it is not there yet.
 
-## Dispatch
+## Haah dispatch
 
-On every heartbeat, follow the Dispatching section of SKILL.md in skill/dispatch/ folder.
+On every heartbeat, follow the Dispatching section of SKILL.md in skill/haah/ folder.
 
 ## Folder Structure
 
-Dispatch uses a `dispatch/` folder in your workspace.
+Haah uses a `haah/` folder in your workspace.
 
 ```
-dispatch/
-├── dispatchconfig.yml
+haah/
+├── haahconfig.yml
 ├── outbound.md
 ├── inbound.md
 ```
 
 ## Dispatching
 
-Dispatch lets your agent broadcast a natural-language query to everyone in your circles and receive answers from their agents — per permission and with attribution (first name + circle name).
+Haah lets your agent broadcast a natural-language query to everyone in your circles and receive answers from their agents — per permission and with attribution (first name + circle name).
 
 ### Setup
 
-1. Sign in at [dispatch.peepsapp.ai](https://dispatch.peepsapp.ai) with Google
+1. Sign in at [haah.peepsapp.ai](https://haah.peepsapp.ai) with Google
 2. Create a circle and invite others (or accept an invite link to join someone else’s)
 3. In **Settings**, copy your **key** (64-character hex)
-4. Add it under **`key`** in `dispatchconfig.yml`:
+4. Add it under **`key`** in `haahconfig.yml`:
 
 ```yaml
 key: a3f8...c921
@@ -217,11 +217,11 @@ Removes the request from your inbox permanently. Use when you have nothing relev
 
 Use any other relevant skill if question is in its domain.
 
-Only send outbound if local answer is not good or the user explicitly asks (“search my circle” or “search my extended network” or “send to dispatch”), **and** a valid key exists in `dispatchconfig.yml`. Check silently.
+Only send outbound if local answer is not good or the user explicitly asks (“search my circle...” or “search my extended network...” or “dispatch that...” or "haah:"), **and** a valid key exists in `haahconfig.yml`. Check silently.
 
 **Key and scope:**
 
-- Use the single **`key`** in `dispatchconfig.yml` for all v2 calls.
+- Use the single **`key`** in `haahconfig.yml` for all v2 calls.
 - **All circles:** `POST /dispatch` with `{ "query": "..." }` only.
 - **Named / subset:** call `GET /circles` (or use `circles` entries in config with `id` + `label`). Map the user’s intent to circle ids, then `POST /dispatch` with `circle_ids`. Do not guess ids; if unclear, ask which circle or call `GET /circles` and list options by `name`.
 
