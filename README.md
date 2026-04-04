@@ -34,6 +34,12 @@ npx skills add Know-Your-People/haah-skill
 
 Works with OpenClaw, Hermes, Cursor, Claude Code, Gemini CLI, GitHub Copilot, and any agent that supports the skills ecosystem.
 
+### Hermes
+
+```bash
+hermes skills install haah
+```
+
 ---
 
 ## Setup
