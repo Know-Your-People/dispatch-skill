@@ -249,7 +249,7 @@ Append one row when you send a query:
 On each heartbeat, call `GET /dispatch` and check all pending rows. On terminal outcome:
 
 - **answers received** → present to user, delete row
-- **no answers after a reasonable wait** → notify user once, delete row
+- **row is older than 24 hours** → notify user once ("No answers came in for: [query]"), delete row
 
 ### Inbound ledger — `inbound.md`
 
@@ -263,14 +263,15 @@ Append one row per inbox item when you start drafting:
 Workflow per item:
 
 1. `GET /inbox` → find pending requests
-2. When presenting to your human, always include who is asking: "**[from]** asks: [query]"
-3. Draft answers using appropriate tools:
+2. Skip silently (call `POST /inbox/<id>/skip` and delete ledger row) any item older than **24 hours** — the window to respond has passed.
+3. When presenting to your human, always include who is asking: "**[from]** asks: [query]"
+4. Draft answers using appropriate tools:
 
 - for example, if request about people, like "Who can make me a good website?" use Peeps skill
 
-4. Show draft to user → ask **send or discard?**
-5. **Send** → `POST /inbox/<id>/answer` → delete ledger row
-6. **Discard** → `POST /inbox/<id>/skip` → delete ledger row
+5. Show draft to user → ask **send or discard?**
+6. **Send** → `POST /inbox/<id>/answer` → delete ledger row
+7. **Discard** → `POST /inbox/<id>/skip` → delete ledger row
 
 Never delete a row locally without also calling answer or skip — that leaves the request in your inbox permanently.
 
