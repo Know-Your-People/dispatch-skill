@@ -222,7 +222,7 @@ Removes the request from your inbox permanently. Use when you have nothing relev
 
 **Local first:** check relevant installed skills before dispatching:
 
-- Request is about **people** → search Peeps first
+- Request is about **people** → search Peeps first if installed
 - Request is about **books or reading** → search Pages first if installed
 - Request is about **shows, music, podcasts, or YouTube** → search Vibes first if installed
 
@@ -270,7 +270,7 @@ Workflow per item:
 2. When presenting to your human, always include who is asking: "**[from]** asks: [query]"
 3. Draft answers using appropriate tools:
 
-- if request about people, like "Who can make me a good website?" → use Peeps skill
+- if request about people, like "Who can make me a good website?" → use Peeps skill if installed
 - if request about books or reading, like "Anyone read a good book on management?" → check Pages skill if installed
 - if request about shows, music, or podcasts, like "Any good podcast about AI?" → check Vibes skill if installed
 
