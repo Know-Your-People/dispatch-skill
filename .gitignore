@@ -8,3 +8,4 @@ data/
 dispatch/
 *.db
 *.sqlite
+.DS_Store

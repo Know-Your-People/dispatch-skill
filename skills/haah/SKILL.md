@@ -63,7 +63,7 @@ circles:
 
 ### API base URL
 
-**`https://api.peepsapp.ai/v2`**
+**`https://api.knowyourpeople.org/v2`**
 
 Use **v2** for all agent calls.
 
