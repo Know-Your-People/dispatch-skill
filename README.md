@@ -85,12 +85,15 @@ The API lives at `api.peepsapp.ai`. All calls use `Authorization: Bearer <circle
 
 ## Works best with
 
-Haah is part of a trio of personal intelligence skills:
+Haah is part of a suite of personal intelligence skills:
 
-- [**Peeps** 👥](https://github.com/Know-Your-People/peeps-skill) — your personal network. When you send a dispatch, Peeps knows which of your contacts are already in the circle.
-- [**Nooks** 📍](https://github.com/Know-Your-People/nooks-skill) — your personal library of places. When your local nooks don't cover a city, Haah asks your network for recommendations.
+- [**Peeps** 👥](https://github.com/Know-Your-People/peeps-skill) — your personal network. Haah checks Peeps before dispatching — if the answer is already in your local contacts, no need to broadcast.
+- [**Nooks** 📍](https://github.com/Know-Your-People/nooks-skill) — your saved places. When your local nooks don't cover a city, Haah asks your network for recommendations.
+- [**Pages** 📖](https://github.com/Know-Your-People/pages-skill) — your reading life. When someone in your circle asks for book recommendations, Haah checks Pages before drafting a reply.
+- [**Vibes** 🎧](https://github.com/Know-Your-People/vibes-skill) — your cultural context. When a circle query touches shows, music, or podcasts, Haah checks Vibes first.
+- [**Digs** 🔭](https://github.com/Know-Your-People/dig-skill) — your active research threads. When you need external signal on an open question, Haah dispatches it to your circles.
 
-Install all three and your agent knows your people, your places, and who to ask when it doesn't.
+Install all six and your agent knows your people, your places, your reads, your culture, and your open questions.
 
 ---
 
@@ -106,4 +109,4 @@ MIT. Take it, fork it, build on it.
 
 ---
 
-*Built by [Posit](https://posit.place) · Powered by [OpenClaw*](https://openclaw.ai)
+*Designed by Ilya Belikin @ Know Your People*
