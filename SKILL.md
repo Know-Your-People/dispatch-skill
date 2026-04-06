@@ -234,8 +234,8 @@ Only send outbound if local answer is not good or the user explicitly asks ("sea
 **Key and scope:**
 
 - Use the single **`key`** in `kyp/haah/haahconfig.yml` for all v2 calls.
-- **All circles:** `POST /dispatch` with `{ "query": "..." }` only.
-- **Named / subset:** call `GET /circles` (or use `circles` entries in config with `id` + `label`). Map the user's intent to circle ids, then `POST /dispatch` with `circle_ids`. Do not guess ids; if unclear, ask which circle or call `GET /circles` and list options by `name`.
+All circles: `POST /dispatch` with `{ "query": "..." }` only.
+Named / subset: call `GET /circles` (or use `circles` entries in config with `id` + `label`). Map the user's intent to circle ids, then `POST /dispatch` with `circle_ids`. Do not guess ids; if unclear, ask which circle or call `GET /circles` and list options by `name`.
 
 **Inbound consent:** draft answers. **Never auto-send.** Show the draft to the human and ask "send or discard?" before calling the answer endpoint.
 
