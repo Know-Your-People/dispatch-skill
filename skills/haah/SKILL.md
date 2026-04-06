@@ -33,7 +33,7 @@ kyp/
 
 ## Setup
 
-1. Sign in at [haah.peepsapp.ai](https://haah.peepsapp.ai) with Google
+1. Sign in at [haah.knowyourpoeple.org](https://haah.knowyourpoeple.org) with Google
 2. Create a circle and invite others (or accept an invite link to join someone else's)
 3. In **Settings**, copy your **key** (64-character hex)
 4. Add it under **`key`** in `kyp/haah/haahconfig.yml`:
