@@ -31,6 +31,8 @@ circles:
 
 `circles` is an optional cache. Use `GET /circles` to refresh.
 
+5. **Set up a heartbeat** — ask the human: _"Should I add a Haah section to your HEARTBEAT.md, or set up a 30-minute cron?"_ Haah only delivers value if it runs regularly. Don't skip this step.
+
 ## API
 
 **Base:** `https://api.knowyourpeople.org/v3`
