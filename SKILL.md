@@ -38,7 +38,7 @@ circles:
 
 ### `GET /circles`
 
-Returns `{ circles: [{ id, name, is_owner }] }`.
+Returns `{ open_to_connections: bool, circles: [{ id, name, is_owner }] }`. Cache `open_to_connections` alongside circles in `haahconfig.yml`.
 
 ### `POST /dispatch`
 
@@ -89,7 +89,8 @@ Removes from inbox permanently. Returns `{ ok: true }`.
 3. Show: **"[from]** asks: [query]"
 4. Draft an answer (check Peeps, Pages, Vibes, or other skills first)
 5. Ask human: **"send or discard?"**
-6. Send → `POST /inbox/:id/answer` · Discard → `POST /inbox/:id/skip`
+6. If human wants to send and `open_to_connections` is false, warn before sending: _"Your profile is closed — the asker won't get a link to connect with you. Open up at haah.knowyourpeople.org/profile, or send anyway?"_
+7. Send → `POST /inbox/:id/answer` · Discard → `POST /inbox/:id/skip`
 
 ## Client policy
 
