@@ -75,16 +75,29 @@ Removes from inbox permanently. Returns `{ ok: true }`.
 1. `POST /dispatch` with query (optionally scoped to `circle_ids`)
 2. Acknowledge to human — don't show IDs or filenames
 
+### Heartbeat fetch — run once per heartbeat
+
+Use a single bash script to fetch both endpoints before doing anything else:
+
+```bash
+BASE="https://api.knowyourpeople.org/v3"
+KEY=$(yq '.key' ~/kyp/haah/haahconfig.yml)
+echo "=== dispatch ===" && curl -s -H "Authorization: Bearer $KEY" "$BASE/dispatch?pending=true"
+echo "=== inbox ===" && curl -s -H "Authorization: Bearer $KEY" "$BASE/inbox"
+```
+
+Then reason over the combined output — no second fetch needed.
+
 ### Checking for answers — every heartbeat
 
-1. `GET /dispatch?pending=true`
+1. Read `dispatch` results from the fetch above
 2. Show each answer: **"[from] (via [circle]):** [text]"
 3. If an answer has a `connect_token`, offer: "Want to connect with [from]?" and share the link `https://haah.knowyourpeople.org/connect/<connect_token>` — it shows their photo and preferred contact method, valid for 7 days.
 4. `POST /dispatch/:id/ack` for each shown request
 
 ### Answering others — every heartbeat
 
-1. `GET /inbox`
+1. Read `inbox` results from the fetch above
 2. Skip items older than 24h silently (`POST /inbox/:id/skip`)
 3. Show: **"[from]** asks: [query]"
 4. Draft an answer (check Peeps, Pages, Vibes, or other skills first)
