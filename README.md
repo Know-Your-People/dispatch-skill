@@ -28,11 +28,20 @@ haah/
 
 ## Install
 
+### Claude Code
+
+```bash
+mkdir -p ~/.claude/skills/haah
+curl -o ~/.claude/skills/haah/SKILL.md https://raw.githubusercontent.com/Know-Your-People/haah-skill/main/SKILL.md
+```
+
+### Other agents
+
 ```bash
 npx skills add Know-Your-People/haah-skill
 ```
 
-Works with OpenClaw, Hermes, Cursor, Claude Code, Gemini CLI, GitHub Copilot, and any agent that supports the skills ecosystem.
+Works with OpenClaw, Cursor, Gemini CLI, GitHub Copilot, and any agent that supports the skills ecosystem.
 
 ### Hermes
 
