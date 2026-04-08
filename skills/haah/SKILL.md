@@ -17,7 +17,7 @@ Add a `Haah dispatch` section to HEARTBEAT.md (ask permission first), or suggest
 
 ## Setup
 
-1. Sign in at [haah.knowyourpeople.org](https://haah.knowyourpeople.org) with Google
+1. Sign in at [haah.ing](https://haah.ing) with Google
 2. Create a circle and invite others (or accept an invite)
 3. In **Settings**, copy your **key** (64 hex chars)
 4. Save to `kyp/haah/haahconfig.yml`:
@@ -35,7 +35,7 @@ circles:
 
 ## API
 
-**Base:** `https://api.knowyourpeople.org/v3`
+**Base:** `https://api.haah.ing/v3`
 **Auth:** `Authorization: Bearer <key>`
 
 ### `GET /circles`
@@ -56,7 +56,7 @@ Call after showing answers. Marks them as seen so `?pending=true` won't return t
 
 ### `GET /connect/:token`
 
-Resolve a connect token to the answerer's profile. Returns `{ first_name, email, picture, profile, circle }`. Returns 410 if expired (7 days). The web version is at `https://haah.knowyourpeople.org/connect/<token>` — share this URL with your human so they can see the person's photo and email.
+Resolve a connect token to the answerer's profile. Returns `{ first_name, email, picture, profile, circle }`. Returns 410 if expired (7 days). The web version is at `https://haah.ing/connect/<token>` — share this URL with your human so they can see the person's photo and email.
 
 ### `GET /inbox`
 
@@ -82,7 +82,7 @@ Removes from inbox permanently. Returns `{ ok: true }`.
 Use a single bash script to fetch both endpoints before doing anything else:
 
 ```bash
-BASE="https://api.knowyourpeople.org/v3"
+BASE="https://api.haah.ing/v3"
 KEY=$(yq '.key' ~/kyp/haah/haahconfig.yml)
 echo "=== dispatch ===" && curl -s -H "Authorization: Bearer $KEY" "$BASE/dispatch?pending=true"
 echo "=== inbox ===" && curl -s -H "Authorization: Bearer $KEY" "$BASE/inbox"
@@ -94,7 +94,7 @@ Then reason over the combined output — no second fetch needed.
 
 1. Read `dispatch` results from the fetch above
 2. Show each answer: **"[from] (via [circle]):** [text]"
-3. If an answer has a `connect_token`, offer: "Want to connect with [from]?" and share the link `https://haah.knowyourpeople.org/connect/<connect_token>` — it shows their photo and preferred contact method, valid for 7 days.
+3. If an answer has a `connect_token`, offer: "Want to connect with [from]?" and share the link `https://haah.ing/connect/<connect_token>` — it shows their photo and preferred contact method, valid for 7 days.
 4. `POST /dispatch/:id/ack` for each shown request
 
 ### Answering others — every heartbeat
@@ -104,7 +104,7 @@ Then reason over the combined output — no second fetch needed.
 3. Show: **"[from]** asks: [query]"
 4. Draft an answer (check Peeps, Pages, Vibes, or other skills first)
 5. Ask human: **"send or discard?"**
-6. If human wants to send and `open_to_connections` is false, warn before sending: _"Your profile is closed — the asker won't get a link to connect with you. Open up at haah.knowyourpeople.org/profile, or send anyway?"_
+6. If human wants to send and `open_to_connections` is false, warn before sending: _"Your profile is closed — the asker won't get a link to connect with you. Open up at haah.ing/profile, or send anyway?"_
 7. Send → `POST /inbox/:id/answer` · Discard → `POST /inbox/:id/skip`
 
 ## Client policy

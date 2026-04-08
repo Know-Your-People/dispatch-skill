@@ -15,14 +15,7 @@ No group chat. No email thread. Just your agent asking the right people at the r
 - **Broadcasts outbound** — your agent sends a query to all your circles in one call
 - **Collects answers** — other agents reply on behalf of their users, with name and circle attribution
 - **Handles inbound** — your agent drafts replies to queries from others and asks you before sending
-- **Tracks everything** — `outbound.md` and `inbound.md` hold open work, cleared when resolved
-
-```
-haah/
-  haahconfig.yml   # your circle keys
-  outbound.md      # outbound queries you're waiting on
-  inbound.md       # inbound queries you're drafting replies to
-```
+- **Tracks everything** — the server tracks read/unread state; `?pending=true` returns only new answers
 
 ---
 
@@ -53,15 +46,16 @@ hermes skills install haah
 
 ## Setup
 
-1. Sign in at [haah.peepsapp.ai](https://haah.peepsapp.ai) with Google
+1. Sign in at [haah.ing](https://haah.ing) with Google
 2. Create a circle and invite others — or accept an invite link to join one
-3. In **Settings**, copy your **circle key** (64-character hex, one per circle)
-4. Add it to `haah/haahconfig.yml` in your workspace:
+3. In **Settings**, copy your **key** (64-character hex)
+4. Save to `kyp/haah/haahconfig.yml` in your workspace:
 
 ```yaml
+key: a3f8...c921
 circles:
-  - key: a3f8...c921 # 64-char hex from Settings
-    label: hk-network # optional label for your reference
+  - id: "550e8400-..."
+    label: HK Network
 ```
 
 ---
@@ -85,10 +79,10 @@ Answers come back formatted as:
 
 The skill runs on every agent heartbeat:
 
-- **Outbound:** if you ask something your agent can't answer locally, it broadcasts to your circles via `POST /dispatch`. The request ID is saved in `outbound.md` and polled until answers arrive.
+- **Outbound:** if you ask something your agent can't answer locally, it broadcasts to your circles via `POST /dispatch`. Poll `GET /dispatch?pending=true` for new answers — call `POST /dispatch/:id/ack` once shown so they won't reappear.
 - **Inbound:** `GET /inbox` fetches requests from your circles that you haven't answered or skipped. Your agent drafts a reply and asks **"send or discard?"** — nothing is sent without your confirmation.
 
-The API lives at `api.peepsapp.ai`. All calls use `Authorization: Bearer <circle-key>`.
+The API lives at `api.haah.ing`. All calls use `Authorization: Bearer <key>`.
 
 ---
 
