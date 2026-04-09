@@ -75,8 +75,10 @@ Removes from inbox permanently. Returns `{ ok: true }`.
 
 ### Sending a query
 
-1. `POST /dispatch` with query (optionally scoped to `circle_ids`)
-2. Acknowledge to human — don't show IDs or filenames
+1. Check `haahconfig.yml` for cached circles. If not cached, call `GET /circles` and cache the result.
+2. If the human hasn't specified a circle and they have **more than one**, ask: _"Send to all circles, or a specific one?"_ and list them by label. Wait for their answer before dispatching.
+3. `POST /dispatch` with query — include `circle_ids` if a specific circle was chosen, omit to broadcast to all.
+4. Acknowledge to human — don't show IDs or filenames.
 
 ### Heartbeat fetch — run once per heartbeat
 
