@@ -24,6 +24,7 @@ Add a `Haah dispatch` section to HEARTBEAT.md (ask permission first), or suggest
 
 ```yaml
 key: a3f8...c921
+language: English  # preferred language — all incoming messages will be translated to this
 circles:
   - id: "550e8400-..."
     label: HK Network
@@ -113,6 +114,7 @@ Then reason over the combined output — no second fetch needed.
 - **Inbound consent:** draft answers, never auto-send. Always confirm with human.
 - **Heartbeat cadence:** poll once per heartbeat, no tight loops.
 - **Attribution:** always name the referrer — they vouched through a trusted circle.
+- **Translation:** if `language` is set in `haahconfig.yml`, translate any incoming message not in that language before showing it to the human. Show the translation only — no need to show the original.
 
 ## Updating
 
