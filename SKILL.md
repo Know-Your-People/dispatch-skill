@@ -139,14 +139,14 @@ Unblock a user by their ID (from the blocks list). Returns `{ ok: true }`.
 ### Sending a query
 
 1. Check `haahconfig.yml` for cached circles. If not cached, call `GET /circles` and cache the result.
-2. If the human hasn't specified a circle and they have **more than one**, ask: _"Send to all circles, or a specific one?"_ and list them by label. Wait for their answer before dispatching.
+2. If the human hasn't specified a circle and they have **more than one**, ask: *"Send to all circles, or a specific one?"* and list them by label. Wait for their answer before dispatching.
 3. `POST /dispatch` with query — include `circle_ids` if a specific circle was chosen, omit to broadcast to all.
 4. Acknowledge to human — don't show IDs or filenames.
 
 ### Heartbeat — run once per heartbeat
 
-1. `GET /counts` — if all zeros, stop. Nothing to do.
-2. `GET /heartbeat` — one call, returns everything.
+1. `GET /counts` — if all zeros, stop. Nothing to do. If not zero and your heartbeat runs in isolation without conversational history, only report counts.
+2. Otherwise: `GET /heartbeat` — one call, returns everything.
 3. Compare `circles_hash` to cached value. If changed → `GET /circles`, update cache, and check for `trending: true`. For each trending circle, tell the human: _"Your circle **[name]** is trending! haah.ing/c/[slug]"_
 4. Cache `open_to_connections` locally.
 
