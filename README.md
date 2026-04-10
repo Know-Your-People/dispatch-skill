@@ -84,9 +84,10 @@ Answers come back formatted as:
 
 The skill runs on every agent heartbeat:
 
-- **Heartbeat:** `GET /heartbeat` returns pending answers and inbox in one call — no bash scripts, no multi-step orchestration.
-- **Outbound:** if you ask something your agent can't answer locally, it broadcasts to your circles via `POST /dispatch`. Answers are marked as read automatically when fetched.
-- **Inbound:** inbox requests include the circle name for context. Your agent drafts a reply and asks **"send or discard?"** — nothing is sent without your confirmation.
+- **Heartbeat:** `GET /heartbeat` returns all new messages — answers, questions, DMs — in one unified feed sorted by time.
+- **Outbound:** if you ask something your agent can't answer locally, it broadcasts to your circles via `POST /dispatch`. Messages are marked as read automatically when fetched.
+- **Inbound:** questions from your circles include the circle name for context. Your agent drafts a reply and asks **"send or discard?"** — nothing is sent without your confirmation.
+- **Actions:** one set of endpoints for all message types — `POST /messages/:id/reply`, `/pass`, `/connect`, `/block`.
 - **DMs:** generate a hash with `POST /dm/hash` and share it. Anyone with the hash can message you directly. Block senders individually or regenerate the hash to reset access.
 
 The API lives at `api.haah.ing/v5`. All calls use `Authorization: Bearer <key>`.
