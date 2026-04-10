@@ -42,6 +42,10 @@ circles:
 **Base:** `https://api.haah.ing/v5`
 **Auth:** `Authorization: Bearer <key>`
 
+### `GET /counts`
+
+Lightweight unread totals — no message bodies, no side effects. Returns `{ answers: int, questions: int, dms: int }`. Use this before deciding whether to call `/heartbeat` or `/messages`.
+
 ### `GET /circles`
 
 Returns `{ open_to_connections, circles_hash, circles: [{ id, name, slug, is_owner, trending }] }`.
@@ -141,9 +145,10 @@ Unblock a user by their ID (from the blocks list). Returns `{ ok: true }`.
 
 ### Heartbeat — run once per heartbeat
 
-1. `GET /heartbeat` — one call, returns everything.
-2. Compare `circles_hash` to cached value. If changed → `GET /circles`, update cache, and check for `trending: true`. For each trending circle, tell the human: _"Your circle **[name]** is trending! haah.ing/c/[slug]"_
-3. Cache `open_to_connections` locally.
+1. `GET /counts` — if all zeros, stop. Nothing to do.
+2. `GET /heartbeat` — one call, returns everything.
+3. Compare `circles_hash` to cached value. If changed → `GET /circles`, update cache, and check for `trending: true`. For each trending circle, tell the human: _"Your circle **[name]** is trending! haah.ing/c/[slug]"_
+4. Cache `open_to_connections` locally.
 
 ### Showing messages
 
