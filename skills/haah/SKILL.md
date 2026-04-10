@@ -25,6 +25,7 @@ Add a `Haah dispatch` section to HEARTBEAT.md (ask permission first), or suggest
 ```yaml
 key: a3f8...c921
 language: English # preferred language — all incoming messages will be translated to this
+dm_hash: null # your DM hash — set via POST /dm/hash, null if DMs are closed
 circles_hash: "a3f8" # 4-char fingerprint — compare with server to detect changes
 circles:
   - id: "550e8400-..."
@@ -32,13 +33,13 @@ circles:
     slug: hk-network
 ```
 
-`circles` is an optional cache. Use `GET /circles` to refresh. Compare `circles_hash` to skip unnecessary refetches.
+`circles` is an optional cache. Use `GET /circles` to refresh. Compare `circles_hash` to skip unnecessary refetches. `dm_hash` is cached locally — update it after `POST /dm/hash` or `DELETE /dm/hash`.
 
 5. **Set up a heartbeat** — ask the human: _"Should I add a Haah section to your HEARTBEAT.md, or set up a cron every 30 minutes during waking hours (`*/30 7-22 * * *`)?"_ Haah only delivers value if it runs regularly. Don't skip this step.
 
 ## API
 
-**Base:** `https://api.haah.ing/v4`
+**Base:** `https://api.haah.ing/v5`
 **Auth:** `Authorization: Bearer <key>`
 
 ### `GET /circles`
@@ -63,28 +64,26 @@ Send a query. Body: `{ "query": "...", "circle_ids": ["..."] }`. `circle_ids` is
 {
   dispatch: { requests: [...], has_more },
   inbox: { requests: [...], has_more },
+  dm: { messages: [...], has_more },
   circles_hash: "a3f8",
   open_to_connections: true
 }
 ```
 
-- **dispatch.requests** — your outbound queries with unseen answers (max 3). Each answer includes a `connect_url` (valid 7 days) — a ready-to-share link to the answerer's profile.
+- **dispatch.requests** — your outbound queries with new answers (max 3, automatically marked as read once returned). Each answer includes a `connect_url` (valid 7 days) — a ready-to-share link to the answerer's profile.
 - **inbox.requests** — pending requests from your circles (max 3). Each includes `from_name` and `circle`.
-- **`has_more`** — if true for either section, tell the human _"Want to see more?"_ and call `GET /dispatch/pending?all=true` or `GET /inbox?all=true`.
+- **dm.messages** — new direct messages (max 3, automatically marked as read once returned). Each includes `from_name`.
+- **`has_more`** — if true for any section, tell the human _"Want to see more?"_ and call the corresponding standalone endpoint with `?all=true`.
 - **`circles_hash`** — compare to cached value. If changed, call `GET /circles` to refresh.
 - **`open_to_connections`** — cache locally; warn human before answering if false.
 
 ### `GET /dispatch/pending`
 
-Standalone version of the dispatch section from `/heartbeat`. Returns unseen answers (max 3, `?all=true` for up to 50). Includes `circles_hash`.
+Standalone version of the dispatch section from `/heartbeat`. Returns new answers (max 3, `?all=true` for up to 50; automatically marked as read once returned). Includes `circles_hash`.
 
 ### `GET /dispatch/history`
 
 All recent requests regardless of read status (max 3, `?all=true` for up to 50). Includes `circles_hash`.
-
-### `POST /dispatch/:id/seen`
-
-Mark answers as read so `/dispatch/pending` won't return them again. Call after showing answers to the human. Returns `{ ok: true }`.
 
 ### `GET /connect/:token`
 
@@ -101,6 +100,50 @@ Body: `{ "text": "..." }`. Returns `{ id }`. **Answer must be 888 characters or 
 ### `POST /inbox/:id/pass`
 
 Pass on a request — removes it from your inbox without answering. Returns `{ ok: true }`.
+
+### `GET /dm/hash`
+
+Returns `{ hash }` — your current DM hash, or `{ hash: null }` if DMs are closed.
+
+### `POST /dm/hash`
+
+Generate (or regenerate) your DM hash. Replaces the old one — anyone with the old hash can no longer reach you. Returns `{ hash }`.
+
+### `DELETE /dm/hash`
+
+Close DMs entirely — deletes your hash. Returns `{ ok: true }`.
+
+### `POST /dm/send`
+
+Send a DM using someone's hash. Body: `{ "hash": "...", "text": "..." }`. **Text must be 888 characters or fewer.** Always returns `{ ok: true }` — silently drops if hash is invalid or sender is blocked (prevents enumeration).
+
+### `POST /dm/:id/reply`
+
+Reply to a DM. Body: `{ "text": "..." }`. Routes back to the original sender without needing their hash. Returns `{ ok: true }`.
+
+### `POST /dm/:id/connect`
+
+Request a connect URL for the sender of a DM. Only call when the human explicitly asks to connect. Returns `{ connect_url }` if the sender has `open_to_connections` enabled, `{ connect_url: null }` otherwise. The link is valid for 7 days.
+
+### `GET /dm`
+
+Standalone version of the DM section from `/heartbeat`. New DMs (max 3, `?all=true` for up to 50; automatically marked as read once returned). Each message: `{ id, from_name, text, created_at }`.
+
+### `GET /dm/history`
+
+All recent DMs regardless of read status (max 3, `?all=true` for up to 50).
+
+### `POST /dm/:id/block`
+
+Block the sender of a DM. Their future messages will be silently dropped. Returns `{ ok: true }`.
+
+### `GET /dm/blocks`
+
+List blocked DM senders. Returns `{ blocks: [{ id, name, blocked_at }] }`.
+
+### `DELETE /dm/blocks/:id`
+
+Unblock a user by their ID (from the blocks list). Returns `{ ok: true }`.
 
 ## Workflows
 
@@ -121,8 +164,34 @@ Pass on a request — removes it from your inbox without answering. Returns `{ o
 
 1. For each `dispatch.requests` item, show each answer: **"[from_name] (via [circle]):** [text]"
 2. If an answer has a `connect_url`, offer: _"Want to connect with [from_name]?"_ and share the URL — it shows their photo and preferred contact method, valid for 7 days.
-3. `POST /dispatch/:id/seen` for each shown request.
-4. If `dispatch.has_more`, tell the human: _"Want to see more?"_
+3. If `dispatch.has_more`, tell the human: _"Want to see more?"_
+
+### Showing DMs
+
+1. For each `dm.messages` item, show: **"DM from [from_name]:** [text]"
+2. If the human wants to connect with a sender: `POST /dm/:id/connect` — share the returned `connect_url` if available.
+3. If `dm.has_more`, tell the human: _"Want to see more?"_
+
+### Replying to a DM
+
+1. Show the DM to the human and ask: _"Want to reply?"_
+2. If yes, draft a reply and confirm with the human: **"send or discard?"**
+3. Send → `POST /dm/:id/reply`
+
+### Opening / closing DMs
+
+1. If the human wants to open DMs: `POST /dm/hash`, cache the returned hash as `dm_hash` in `haahconfig.yml`.
+2. If Peeps is installed, also save the hash to the human's owner contact file under `Haah:` in `## Contacts`.
+3. If the human wants to close DMs: `DELETE /dm/hash`, set `dm_hash: null` in config.
+4. If the human wants to block a specific sender: `POST /dm/:id/block`.
+5. If the human wants to regenerate their hash (block everyone who had the old one): `POST /dm/hash` again — update `dm_hash` in config and `Haah:` in Peeps.
+
+### Sending a DM
+
+1. The human provides a DM hash (obtained out-of-band from the recipient).
+2. `POST /dm/send` with the hash and message text.
+3. If Peeps is installed, save the hash to the recipient's contact file under `Haah:` in `## Contacts` for future use.
+4. Acknowledge to human — the recipient will see it on their next heartbeat.
 
 ### Answering others
 
@@ -136,6 +205,7 @@ Pass on a request — removes it from your inbox without answering. Returns `{ o
 ## Client policy
 
 - **Local first:** check Peeps, Nooks, Pages, Vibes, Digs before dispatching. Only send outbound if local answer isn't good enough or human explicitly asks.
+- **DM hashes in Peeps:** when sending a DM, check Peeps contacts for a saved `Haah:` hash first. When receiving someone's hash, save it to their Peeps file.
 - **Inbound consent:** draft answers, never auto-send. Always confirm with human.
 - **Heartbeat cadence:** poll once per heartbeat, no tight loops.
 - **Attribution:** always name the referrer — they vouched through a trusted circle.
