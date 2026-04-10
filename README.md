@@ -55,6 +55,7 @@ hermes skills install haah
 ```yaml
 key: a3f8...c921
 language: English
+dm_hash: null
 circles_hash: "a3f8"
 circles:
   - id: "550e8400-..."
