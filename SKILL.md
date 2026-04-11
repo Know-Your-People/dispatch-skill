@@ -92,7 +92,7 @@ All recent messages regardless of read status (max 3, `?all=true` for up to 50).
 
 ### `POST /messages/:id/reply`
 
-Reply to a question or DM. Body: `{ "text": "..." }`. **Text must be 888 characters or fewer.** Server determines the message type automatically — works for both circle questions and DMs. Returns `{ id }` for circle answers, `{ ok: true }` for DMs.
+Reply to a question or DM. Body: `{ "text": "...", "reply_to": "answer_id" }`. **Text must be 888 characters or fewer.** `reply_to` is optional — include the ID of a specific answer to thread your reply to that person. Server determines the message type automatically — works for both circle questions and DMs. Returns `{ id }` for circle answers, `{ ok: true }` for DMs.
 
 ### `POST /messages/:id/pass`
 
